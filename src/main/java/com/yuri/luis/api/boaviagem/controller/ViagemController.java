@@ -37,12 +37,18 @@ public class ViagemController {
 	private DespesaRepository despesaRepository;
 	
 	@GetMapping
-	public List<Viagem> findAll() {
+	public List<Viagem> findAll() { 
+		
 		List<Viagem> lista = viagemRepository.findAll(Sort.by("dataChegada"));
+		
 		for (Viagem viagem : lista) {
+			
 			List<Despesa> despesas = viagem.getDespesa();
+			
 			despesas.sort(Comparator.comparing(Despesa::getTipo));
+			
 			viagem.setDespesa(despesas);
+			
 		}
 		return lista;
 	}
@@ -50,11 +56,17 @@ public class ViagemController {
 	
 	@PostMapping("/salvaViagem")
 	public Viagem salvar(@RequestBody Viagem v) {
+		
 		Viagem var = viagemRepository.save(v);
+		
 		v.setIdViagem(var.getIdViagem());
+		
 		if (v.getDespesa() != null) {
+			
 			for (Despesa i : v.getDespesa()) {
+				
 				i.setIdViagem(var);
+				
 				;
 				despesaRepository.save(i);
 			}
@@ -64,29 +76,30 @@ public class ViagemController {
 	
 	
 	@PostMapping("/deletaDespesa/{idviagem}")
+	
 	public Viagem deletaDespesa(@PathVariable("idviagem") Integer idviagem, @RequestBody Despesa despesa) {
+		
 		despesaRepository.deleteById(despesa.getIdDespesa());
+		
 		return viagemRepository.findById(idviagem).get();
+		
 	}
 
 	
 	@PostMapping("/adicionaDespesa/{idviagem}")
 	public ResponseEntity<?> adicionaDespesa(@PathVariable("idviagem") Integer idViagem, @RequestBody Despesa despesa) {
+		
 		Viagem viagem = viagemRepository.findById(idViagem).get();
+		
 		despesa.setIdViagem(viagem);
+		
 		despesaRepository.save(despesa);
+		
 		Optional<Viagem> r = viagemRepository.findById(idViagem);
+		
 		return ResponseEntity.ok(r.get());
 	}
 	
-	@PostMapping("/adicionaDespesa/{idviagem}/{idDespesa}")
-	public ResponseEntity<?> atualizaDespesa(@PathVariable("idviagem") Integer idViagem, @RequestBody Despesa despesa) {
-		Viagem viagem = viagemRepository.findById(idViagem).get();
-		despesa.setIdViagem(viagem);
-		despesaRepository.save(despesa);
-		Optional<Viagem> r = viagemRepository.findById(idViagem);
-		return ResponseEntity.ok(r.get());
-	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<?> findById(@PathVariable("id") Integer id) {
@@ -100,11 +113,16 @@ public class ViagemController {
 	
 	@DeleteMapping("/{id}")
 	public void deleteViagem(@PathVariable("id") Integer id) {
+		
 		Viagem viagem = viagemRepository.findById(id).get();
+		
 		for (Despesa i : viagem.getDespesa()) {
+			
 			despesaRepository.deleteById(i.getIdDespesa());
+			
 		}
 		viagem = viagemRepository.findById(id).get();
+		
 		viagemRepository.deleteById(id);
 	}
 
@@ -115,27 +133,44 @@ public class ViagemController {
 			@PathVariable("idusuario") Integer idusuario) {
 		
 		List<Viagem> lista = viagemRepository.findAll(Sort.by("dataPartida"));
+		
 		ArrayList<Viagem> retorno = new ArrayList<Viagem>();
 
 		Date dataFiltro = StringToDate(data);
+		
 		if (dataFiltro != null) {
-			for (Viagem viagem : lista) {
+			
+			for (Viagem viagem : lista) 
+			{
 				if (viagem.getIdLogin().getIdLogin() == idusuario) {
+					
 					List<Despesa> despesas = viagem.getDespesa();
+					
 					despesas.sort(Comparator.comparing(Despesa::getTipo));
+					
 					viagem.setDespesa(despesas);
+					
 					if (viagem.getDataChegada() != null) {
+						
 						Date dataChegada = StringToDate(viagem.getDataChegada());
+						
 						if (dataChegada != null) {
+							
 							if ((dataChegada.after(dataFiltro)) || (dataChegada.equals(dataFiltro))) {
+								
 								if (viagem.getDataPartida() != null) {
+									
 									Date dataPartida = StringToDate(viagem.getDataPartida());
+									
 									if (dataPartida != null) {
+										
 										if ((dataPartida.before(dataFiltro)) || (dataPartida.equals(dataFiltro))) {
+											
 											retorno.add(viagem);
 										}
 									}
 								} else {
+									
 									retorno.add(viagem);
 								}
 
@@ -149,9 +184,13 @@ public class ViagemController {
 	}
 	
 	private Date StringToDate(String dateStr) {
+		
 		try {
+			
 			return (new SimpleDateFormat("dd/MM/yyyy")).parse(dateStr);
+			
 		} catch (ParseException ex) {
+			
 			return null;
 		}
 	}
