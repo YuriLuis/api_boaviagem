@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
+@Table
 public class Login implements Serializable {
 	private static final long serialVersionUID = 1L;
 
