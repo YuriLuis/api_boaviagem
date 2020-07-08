@@ -110,16 +110,16 @@ public class ViagemController {
 	@DeleteMapping("/{idViagem}")
 	public void deleteViagem(@PathVariable("idViagem") Integer idViagem) {
 		
-		Viagem viagem = viagemRepository.findById(idviagem).get();
+		Viagem viagem = viagemRepository.findById(idViagem).get();
 		
 		for (Despesa i : viagem.getDespesa()) {
 			
 			despesaRepository.deleteById(i.getIdDespesa());
 			
 		}
-		viagem = viagemRepository.findById(idviagem).get();
+		viagem = viagemRepository.findById(idViagem).get();
 		
-		viagemRepository.deleteById(idviagem);
+		viagemRepository.deleteById(idViagem);
 	}
 
 	@GetMapping("/viagemPorUsuario/{idLogin}")
