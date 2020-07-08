@@ -50,5 +50,18 @@ public class LoginController {
 		loginRepository.deleteById(id);
 	}
 	
-	
+	@PostMapping("/autenticaLogin")
+	public Login validaLogin(@RequestBody Login login) {
+		Login retorno = new Login();
+		List<Login> lista = loginRepository.findAll();
+		for (Login l : lista) {
+			if (l.getEmail().equalsIgnoreCase(login.getEmail())) {
+				if (l.getSenha().equals(login.getSenha())) {
+					retorno = l;
+				}
+				break;
+			}
+		}
+		return retorno;
+	}
 }

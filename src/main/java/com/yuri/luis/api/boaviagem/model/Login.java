@@ -20,8 +20,12 @@ public class Login implements Serializable {
 
 	@Column(length = 150)
 	private String nome;
+	
 	@Column(length = 80)
 	private String email;
+	
+	@Column(length = 20)
+	private String senha;
 
 	public Integer getIdLogin() {
 		return idLogin;
@@ -46,5 +50,12 @@ public class Login implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
 }
