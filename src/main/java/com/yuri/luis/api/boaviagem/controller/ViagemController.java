@@ -1,10 +1,7 @@
 package com.yuri.luis.api.boaviagem.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,7 +73,6 @@ public class ViagemController {
 	
 	
 	@PostMapping("/deletaDespesa/{idviagem}")
-	
 	public Viagem deletaDespesa(@PathVariable("idviagem") Integer idviagem, @RequestBody Despesa despesa) {
 		
 		despesaRepository.deleteById(despesa.getIdDespesa());
@@ -126,72 +122,27 @@ public class ViagemController {
 		viagemRepository.deleteById(id);
 	}
 
-	
-	
-	@GetMapping("/ViagensNoPeriodo/{data}/{id_login}")
-	public List<Viagem> findViagensNoPeriodo(@PathVariable("data") String data,
-			@PathVariable("idusuario") Integer idusuario) {
+	@GetMapping("/viagemPorUsuario/{idLogin}")
+	public List<Viagem> viagemPorUsuario(@PathVariable("idLogin") Integer idLogin) {
 		
-		List<Viagem> lista = viagemRepository.findAll(Sort.by("dataPartida"));
+		List<Viagem> list = viagemRepository.findAll(Sort.by("dataChegada"));
 		
-		ArrayList<Viagem> retorno = new ArrayList<Viagem>();
-
-		Date dataFiltro = StringToDate(data);
+		ArrayList<Viagem> listViagem = new ArrayList<Viagem>();
 		
-		if (dataFiltro != null) {
+		for (Viagem v : list) {
 			
-			for (Viagem viagem : lista) 
-			{
-				if (viagem.getIdLogin().getIdLogin() == idusuario) {
-					
-					List<Despesa> despesas = viagem.getDespesa();
-					
-					despesas.sort(Comparator.comparing(Despesa::getTipo));
-					
-					viagem.setDespesa(despesas);
-					
-					if (viagem.getDataChegada() != null) {
-						
-						Date dataChegada = StringToDate(viagem.getDataChegada());
-						
-						if (dataChegada != null) {
-							
-							if ((dataChegada.after(dataFiltro)) || (dataChegada.equals(dataFiltro))) {
-								
-								if (viagem.getDataPartida() != null) {
-									
-									Date dataPartida = StringToDate(viagem.getDataPartida());
-									
-									if (dataPartida != null) {
-										
-										if ((dataPartida.before(dataFiltro)) || (dataPartida.equals(dataFiltro))) {
-											
-											retorno.add(viagem);
-										}
-									}
-								} else {
-									
-									retorno.add(viagem);
-								}
-
-							}
-						}
-					}
-				}
+			if(v.getIdLogin().getIdLogin() == idLogin) {
+				
+				List<Despesa> gastos = v.getDespesa();
+				
+				gastos.sort(Comparator.comparing(Despesa::getData));
+				
+				v.setDespesa(gastos);
+				
+				listViagem.add(v);
 			}
 		}
-		return retorno;
+		return listViagem;
 	}
 	
-	private Date StringToDate(String dateStr) {
-		
-		try {
-			
-			return (new SimpleDateFormat("dd/MM/yyyy")).parse(dateStr);
-			
-		} catch (ParseException ex) {
-			
-			return null;
-		}
-	}
 }
