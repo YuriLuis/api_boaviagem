@@ -72,18 +72,18 @@ public class ViagemController {
 	}
 	
 	
-	@PostMapping("/deletaDespesa/{idviagem}")
-	public Viagem deletaDespesa(@PathVariable("idviagem") Integer idviagem, @RequestBody Despesa despesa) {
+	@PostMapping("/deletaDespesa/{idViagem}")
+	public Viagem deletaDespesa(@PathVariable("idViagem") Integer idViagem, @RequestBody Despesa despesa) {
 		
 		despesaRepository.deleteById(despesa.getIdDespesa());
 		
-		return viagemRepository.findById(idviagem).get();
+		return viagemRepository.findById(idViagem).get();
 		
 	}
 
 	
-	@PostMapping("/adicionaDespesa/{idviagem}")
-	public ResponseEntity<?> adicionaDespesa(@PathVariable("idviagem") Integer idViagem, @RequestBody Despesa despesa) {
+	@PostMapping("/adicionaDespesa/{idViagem}")
+	public ResponseEntity<?> adicionaDespesa(@PathVariable("idViagem") Integer idViagem, @RequestBody Despesa despesa) {
 		
 		Viagem viagem = viagemRepository.findById(idViagem).get();
 		
@@ -97,29 +97,29 @@ public class ViagemController {
 	}
 	
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<?> findById(@PathVariable("id") Integer id) {
+	@GetMapping("/{idViagem}")
+	public ResponseEntity<?> findById(@PathVariable("idViagem") Integer idViagem) {
 		
-		Optional<Viagem> viagem = viagemRepository.findById(id);
+		Optional<Viagem> viagem = viagemRepository.findById(idViagem);
 		if (viagem.isPresent()) {
 			return ResponseEntity.ok(viagem.get());
 		}
 		return ResponseEntity.notFound().build();
 	}
 	
-	@DeleteMapping("/{id}")
-	public void deleteViagem(@PathVariable("id") Integer id) {
+	@DeleteMapping("/{idViagem}")
+	public void deleteViagem(@PathVariable("idViagem") Integer idViagem) {
 		
-		Viagem viagem = viagemRepository.findById(id).get();
+		Viagem viagem = viagemRepository.findById(idviagem).get();
 		
 		for (Despesa i : viagem.getDespesa()) {
 			
 			despesaRepository.deleteById(i.getIdDespesa());
 			
 		}
-		viagem = viagemRepository.findById(id).get();
+		viagem = viagemRepository.findById(idviagem).get();
 		
-		viagemRepository.deleteById(id);
+		viagemRepository.deleteById(idviagem);
 	}
 
 	@GetMapping("/viagemPorUsuario/{idLogin}")

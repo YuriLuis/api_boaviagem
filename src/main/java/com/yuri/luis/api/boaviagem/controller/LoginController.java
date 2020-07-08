@@ -36,18 +36,18 @@ public class LoginController {
 		return loginRepository.save(login);
 	}
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<?> findById(@PathVariable("id") Integer id) {
-		Optional<Login> login = loginRepository.findById(id);
+	@GetMapping("/{idLogin}")
+	public ResponseEntity<?> findById(@PathVariable("idLogin") Integer idLogin) {
+		Optional<Login> login = loginRepository.findById(idLogin);
 		if (login.isPresent()) {
 			return ResponseEntity.ok(login.get());
 		}
 		return ResponseEntity.notFound().build();
 	}
 	
-	@DeleteMapping("/deletaLogin/{id}")
-	public void delete(@PathVariable("id") Integer id) {
-		loginRepository.deleteById(id);
+	@DeleteMapping("/deletaLogin/{idLogin}")
+	public void delete(@PathVariable("idLogin") Integer idLogin) {
+		loginRepository.deleteById(idLogin);
 	}
 	
 	@PostMapping("/autenticaLogin")
