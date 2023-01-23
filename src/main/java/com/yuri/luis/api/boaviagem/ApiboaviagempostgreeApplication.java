@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ApiboaviagempostgreeApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ApiboaviagempostgreeApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ApiboaviagempostgreeApplication.class, args);
+    }
 
 }
